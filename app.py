@@ -9,6 +9,8 @@ from dash.dash import no_update
 from dash.dependencies import Input, Output, State
 import plotly.express as px
 import openai
+import pandas as pd
+import matplotlib
 
 
 def Header(name, app):
@@ -20,7 +22,20 @@ def Header(name, app):
 
 
 # Load data
-df = px.data.gapminder()
+df = pd.read_csv("data/spaceship_earth.csv")
+df = df.rename(columns = {"date": "Date", "datetime": "Date and Time", "SACTMIN": "Actual Wait", "SPOSTMIN": "Posted Wait"})
+df = df[df["Posted Wait"] != -999]
+df["Ride"] = "Spaceship Earth"
+df["Date"] = pd.to_datetime(df["Date"]).dt.date
+df["Time"] = pd.to_datetime(df["Date and Time"]).dt.time
+df["Year"] = pd.Categorical(pd.to_datetime(df["Date"]).dt.year)
+df["Month"] = pd.to_datetime(df["Date"]).dt.month
+
+df_average_month = df.groupby(["Year", "Month"]).mean()
+df_average_month["Year"] = df_average_month.index.get_level_values("Year")
+df_average_month["Month"] = df_average_month.index.get_level_values("Month")
+df_average_month["Ride"] = "Spaceship Earth"
+
 
 # Authentication
 openai.api_key = os.getenv("OPENAI_KEY")
@@ -28,11 +43,13 @@ openai.api_key = os.getenv("OPENAI_KEY")
 
 # Define the prompt
 prompt = """
-Our dataframe "df" only contains the following columns: country, continent, year, life expectancy (lifeExp), population (pop), GDP per capita (gdpPercap), the ISO alpha, the ISO numerical.
+Our dataframe "df_average_month" contains the following columns: Ride, Year, Month, Posted Wait, and Actual Wait. 
+The wait times are aggregated over the days within a month.
 
-**Description**: The life expectancy in Oceania countries throughout the years.
 
-**Code**: ```px.line(df.query("continent == 'Oceania'"), x='year', y='lifeExp', color='country', log_y=False, log_x=False)```
+**Description**: The average Posted Wait by month for Spaceship Earth.
+
+**Code**: ```px.line(df_average_month.query("Ride == 'Spaceship Earth'"), x="Month", y="Posted Wait", color = "Year")```
 """
 
 # Create
@@ -53,9 +70,20 @@ chat_input = dbc.InputGroup(
     ]
 )
 output_graph = [
-    dbc.CardHeader("Plotly Express Graph"),
-    dbc.CardBody(dbc.Spinner(dcc.Graph(id="output-graph", style={"height": "425px"}))),
-]
+    dbc.CardHeader("Graph"),
+    dbc.CardImg(
+            src="/assets/spaceshipearth.png",
+            top=True,
+            style={"opacity": 0.8},
+        ),
+        dbc.CardImgOverlay(
+            dbc.CardBody(
+                [
+                dbc.CardBody(dbc.Spinner(dcc.Graph(id="output-graph", style={"height": "350px"}))),
+
+                ],
+            ),
+        ),]
 output_code = [
     dbc.CardHeader("GPT-3 Conversation Interface"),
     dbc.CardBody(
@@ -67,7 +95,7 @@ output_code = [
 explanation = f"""
 *GPT-3 can generate Plotly graphs from a simple description of what you want, and it
 can even modify what you have previously generated!
-We only needed to load the Gapminder dataset and give the following prompt to GPT-3:*
+We can load the Spaceship Earth Wait Times dataset and give the following prompt to GPT-3:*
 
 {prompt}
 """
@@ -82,7 +110,7 @@ right_col = [dbc.Card(output_code), html.Br(), chat_input]
 
 app.layout = dbc.Container(
     [
-        Header("Dash GPT-3 Line Charts Update", app),
+        Header("Spaceship Earth Wait Times", app),
         html.Hr(),
         dbc.Row([dbc.Col(left_col, md=7), dbc.Col(right_col, md=5)]),
     ],
@@ -102,12 +130,10 @@ app.layout = dbc.Container(
 def generate_graph(n_clicks, n_submit, text, conversation):
     if n_clicks is None and n_submit is None:
         default_fig = px.line(
-            df.query("continent == 'Oceania'"),
-            x="year",
-            y="lifeExp",
-            color="country",
-            log_y=False,
-            log_x=False,
+            df_average_month.query("Ride == 'Spaceship Earth'"),
+            x = "Month",
+            y = "Posted Wait",
+            color = "Year",
         )
         return default_fig, dash.no_update, dash.no_update
 
