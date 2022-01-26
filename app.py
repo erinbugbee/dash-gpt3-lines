@@ -1,5 +1,6 @@
 import os
 from textwrap import dedent
+from turtle import width
 
 import dash
 import dash_bootstrap_components as dbc
@@ -56,7 +57,7 @@ The wait times are aggregated over the days within a month.
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
-content_style = {"height": "475px"}
+content_style = {"height": "400px"}
 
 chat_input = dbc.InputGroup(
     [
@@ -74,13 +75,12 @@ output_graph = [
     dbc.CardImg(
             src="/assets/spaceshipearth.png",
             top=True,
-            style={"opacity": 0.8},
+            style={"opacity": 0.8, "height": "500px"},
         ),
         dbc.CardImgOverlay(
             dbc.CardBody(
                 [
-                dbc.CardBody(dbc.Spinner(dcc.Graph(id="output-graph", style={"height": "350px"}))),
-
+                dbc.CardBody(dbc.Spinner(dcc.Graph(id="output-graph")), style={"height": "400px"}),
                 ],
             ),
         ),]

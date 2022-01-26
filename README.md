@@ -1,5 +1,7 @@
 # Dash GPT-3 Line Charts: Walt Disney World
 
+![spaceshipearth](assets/spaceshipearth.png)
+
 This is an app using GPT-3 to create line charts of wait times at Walt Disney World using natural language. This app is built starting from the sample app provided at this [repository](https://github.com/plotly/dash-sample-apps/tree/main/apps/dash-gpt3-lines). Currently, the app incorporates data regarding Spaceship Earth at Epcot. The dataset was retrieved in January 2022 from [TouringPlans.com](https://touringplans.com/walt-disney-world/crowd-calendar#DataSets).
 
 This first graph shows the Posted Wait by year across months for Spaceship Earth. The wait is averaged over all recorded waits within that year and month. One observation is that the wait times are noticeably lower in September across all years. This may indicate lower visitation rates to Epcot during September. Perhaps this is a good time for an event to attract guests, for example the Food and Wine Festival.
