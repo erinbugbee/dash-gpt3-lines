@@ -1,6 +1,6 @@
 # Modified Dash GPT-3 Line Charts
 
-This is an app using GPT-3 to create line charts of wait times at Walt Disney World using natural language. This app is built starting from the template provided at this [repository](https://github.com/plotly/dash-sample-apps/tree/main/apps/dash-gpt3-lines). Currently, the app incorporates data regarding Spaceship Earth at Epcot.
+This is an app using GPT-3 to create line charts of wait times at Walt Disney World using natural language. This app is built starting from the template provided at this [repository](https://github.com/plotly/dash-sample-apps/tree/main/apps/dash-gpt3-lines). Currently, the app incorporates data regarding Spaceship Earth at Epcot. The dataset was retrieved in January 2022 from [TouringPlans.com](https://touringplans.com/walt-disney-world/crowd-calendar#DataSets).
 
 
 # Dash GPT-3 Line Charts Updater
