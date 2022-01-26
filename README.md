@@ -1,4 +1,4 @@
-# Dash GPT-3 Line Charts: Walt Disney World
+# Epcot Spaceship Earth Wait Time Analysis Using GPT-3
 
 ![spaceshipearth](assets/spaceshipearth.png)
 
